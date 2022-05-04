@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Album</title>
+    <title>Album: ${song.name}</title>
 </head>
 <body>
-    <h1>${songs.name}</h1>
-    <h3>${songs.publishDate}</h3>
-    <h3>${songs.songTitles}</h3>
+    ${header}
+    <h1>${song.name}</h1>
+    <h3>${song.publishDate}</h3>
+    <h3>${song.songTitles}</h3>
+    <img style="width: 200px; height: 200px" src="${song.imgURL}"
 
 </body>
 </html>
