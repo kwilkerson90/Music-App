@@ -7,6 +7,8 @@ const express = require('express');
 
 const app = express(); 
 
+const server = http.createServer(app);
+
 const es6Renderer = require('express-es6-template-engine');
 //importing the module and assigning it to the variable es6Renderer
 app.engine('html', es6Renderer);
@@ -16,47 +18,46 @@ app.set('views', 'templates');
 app.set('view engine', 'html');
 //setting the html template engine as the default for this app 
 
-const server = http.createServer(app);
 
 const songs = require('./app'); 
 
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('home', {
+        partials: {
+            header: 'partials/header'
+        }
+    });
     //instead of using res.send to send back whatever, you'll send the contents of the home.html file
     //since you set up the template engine, Express looks in the templates dir by default 
 });
 
-app.get('/songs', (req, res) => {
+app.get('/projects', (req, res) => {
     //adding a second route 
     res.render('albums-list', {
         locals: {
-            songs: app
+            songs: app,
+            path: req.path
         }
     });
 });
 
-app.get('/songs/:name', (req, res) => {
-    const {name} = req.params;
-    const song = songs.find(f => f.name === name);
+app.get('/projects/:id', (req, res) => {
+    const { id } = req.params;
+    //destructuring out the id
+    const song = songs[id];
+
     if (song) {
         res.render('album', {
             locals: {
-                songs
+                song
+            },
+            partials: {
+                header: 'partials/header'
             }
         });
     } else {
         res.status(404)
-            .send(`no album with title ${name}`)
-
-    // let htmlData = ``;
-    // htmlData += `<h1>${song.name}</h1>`;
-    // htmlData += `<h3>${song.publishDate}</h1>`;
-    // htmlData += `<h3>${song.songTitles}</h1>`;
-    // res.send(htmlData);
-    // } else {
-    //     res.status(404)
-    //         .send(`no album with title ${name}`)
-    //     //we use the chaining syntax to set the status code and then send() the response 
+            .send(`no album with title ${id}`)
     }
 });
 
